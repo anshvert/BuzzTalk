@@ -3,15 +3,34 @@ import Image from "next/image"
 import { FcGoogle } from "react-icons/fc";
 import { GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
 import { fireBaseAuth } from "../utils/FirebaseConfig";
+import axios from "axios";
+import { CHECK_USER_ROUTE } from "../utils/ApiRoutes";
+import { NextRouter, useRouter } from "next/router";
+import  {useStateProvider } from "../context/StateContext";
+import {reducerCases} from "../context/constants";
 
 const login = (): React.JSX.Element => {
-
-    const handleLogin = async () => {
-        const provider = new GoogleAuthProvider()
+    const router: NextRouter = useRouter()
+    const [{},dispatch] = useStateProvider()
+    const handleLogin = async (): Promise<void> => {
+        const provider: GoogleAuthProvider = new GoogleAuthProvider()
         const { user: { displayName: name, email, photoURL: profileImage } } = await signInWithPopup(fireBaseAuth,provider)
-        console.log(name,email,profileImage)
+        //console.log(name,email,profileImage)
         if (email) {
-
+            const { data } = await axios.post(CHECK_USER_ROUTE,{ email })
+            console.log(data)
+            if (!data.success) {
+                dispatch({
+                    type: reducerCases.SET_NEW_USER, newUser: true
+                })
+                dispatch({
+                    type: reducerCases.SET_USER_INFO,
+                    userInfo: {
+                        name,email,profileImage,status: ""
+                    }
+                })
+                await router.push("/onboarding")
+            }
         }
     }
 
