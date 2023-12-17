@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/globals.css"
-import {StateProvider} from "../context/StateContext";
+import { StateProvider } from "../context/StateContext";
 import Head from "next/head";
 import reducer, { initialState } from "../context/StateReducers";
 

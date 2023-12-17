@@ -7,7 +7,7 @@ import axios from "axios";
 import { CHECK_USER_ROUTE } from "../utils/ApiRoutes";
 import { NextRouter, useRouter } from "next/router";
 import  {useStateProvider } from "../context/StateContext";
-import {reducerCases} from "../context/constants";
+import { reducerCases } from "../context/constants";
 
 const login = (): React.JSX.Element => {
     const router: NextRouter = useRouter()
@@ -15,7 +15,6 @@ const login = (): React.JSX.Element => {
     const handleLogin = async (): Promise<void> => {
         const provider: GoogleAuthProvider = new GoogleAuthProvider()
         const { user: { displayName: name, email, photoURL: profileImage } } = await signInWithPopup(fireBaseAuth,provider)
-        //console.log(name,email,profileImage)
         if (email) {
             const { data } = await axios.post(CHECK_USER_ROUTE,{ email })
             console.log(data)

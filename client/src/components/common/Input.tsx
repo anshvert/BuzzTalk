@@ -1,0 +1,32 @@
+import React from "react";
+
+type InputProps =  {
+    name: string,
+    state: any,
+    setState: any,
+    label: boolean
+}
+
+const Input: React.FC<InputProps> = ({name,state,setState,label = false}) => {
+  return (
+      <>
+        <div className={`flex gap-1 flex-col`}>
+          { label && (
+            <label htmlFor={name} className={`text-teal-light text-lg px-1`}>
+              {name}
+            </label>
+          )}
+        </div>
+        <div className={``}>
+          <input
+              type="text"
+              name={name}
+              value={state}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setState(e.target.value)}
+              className={`bg-input-background text-start focus:outline-none text-white h-10 rounded-lg px-5 py-4 w-full`}/>
+        </div>
+      </>
+  )
+}
+
+export default Input;
