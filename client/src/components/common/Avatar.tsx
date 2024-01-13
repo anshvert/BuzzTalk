@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Image from "next/image"
 import { FaCamera } from "react-icons/fa";
+import ContextMenu from "./ContextMenu";
+import PhotoPicker from "./PhotoPicker";
 
 type AvatarProps = {
   type: any,
@@ -12,16 +14,35 @@ const Avatar: React.FC<AvatarProps> = ({ type, image, setImage }) => {
     const [hover,setHover] = useState(false)
     const [isContextMenuVisible,setIsContextMenuVisible] = useState(false)
     const [contextMenuCoordinates,setContextMenuCoordinates] = useState({ x: 0, y: 0 })
+    const [grabPhoto,setGrabPhoto] = useState(false)
+    const photoPickerChange = () => {
 
-    const showContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+    }
+
+    const showContextMenu = (e: React.MouseEvent<HTMLDivElement>): void => {
         e.preventDefault()
         setIsContextMenuVisible(true)
         setContextMenuCoordinates({ x: e.pageX, y: e.pageY })
     }
 
+    const contextMenuOptions = [
+        { name: "Take Photo", callback: () => {} },
+        { name: "Choose From Library", callback: () => {} },
+        {
+            name: "Upload Photo",
+            callback: () => {
+                setGrabPhoto(true)
+            }},
+        {
+            name: "Remove Photo",
+            callback: () => {
+                setImage("/default_avatar.png")
+            }},
+    ]
+
     return (
       <>
-        <div className={`flex items-center justify-center`}>
+          <div className={`flex items-center justify-center`}>
             { type === "sm" && (
                 <div className={`relative h-10 w-10`}>
                   <Image src={image} alt="avatar" className="rounded-full" fill/>
@@ -44,7 +65,13 @@ const Avatar: React.FC<AvatarProps> = ({ type, image, setImage }) => {
                     </div>
                 </div>
             )}
-        </div>
+          </div>
+          {
+            isContextMenuVisible && <ContextMenu options={contextMenuOptions} coordinates={contextMenuCoordinates} contextMenu={isContextMenuVisible} setContextMenu={setIsContextMenuVisible}/>
+          }
+          {
+              grabPhoto && <PhotoPicker onChange={photoPickerChange}/>
+          }
       </>
     )
 }
